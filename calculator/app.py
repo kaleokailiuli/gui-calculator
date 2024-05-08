@@ -8,9 +8,10 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QComboBox,
     QSpacerItem,
+    QHBoxLayout,
     QSizePolicy,
 )
-from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 
 
 class AveragingCalculator(QWidget):
@@ -20,81 +21,110 @@ class AveragingCalculator(QWidget):
 
     def initUI(self):
         # Set up the main window
-        self.setWindowTitle("Averaging Calculator")  # Window title
-        self.setStyleSheet("background-color: #444444; color: white; border-radius: 10px;")  # Set main background color to darker grey
+        self.setWindowTitle("Averaging Calculator")
+        self.setFixedSize(600, 600)  # Set window size with fixed dimensions
 
         # Main layout setup
-        self.layout = QVBoxLayout(self)  # Main layout
-        self.layout.setContentsMargins(10, 10, 10, 10)  # Set layout margins
+        self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(10, 10, 10, 10)
+        self.layout.setAlignment(Qt.AlignCenter)  # Center align the layout
 
-        self.num_spinboxes = []  # List to store spin boxes and labels
+        self.num_spinboxes = []
 
         # Label for number count selection
         label_num_count = QLabel("Select the number of numbers to average:")
-        label_num_count.setAlignment(QtCore.Qt.AlignCenter)
-        self.layout.addWidget(label_num_count)
+        label_num_count.setAlignment(Qt.AlignCenter)
+        label_num_count.setStyleSheet("font-weight: bold;")
 
         # ComboBox for selecting number count
         self.number_count_combo = QComboBox()
         self.number_count_combo.addItems(["2", "3", "4", "5"])
+        self.number_count_combo.setFixedSize(300, 40)
+        self.number_count_combo.setStyleSheet(
+            "background-color: white; color: black; border-radius: 5px;"
+        )
+        self.number_count_combo.currentIndexChanged.connect(self.update_spinboxes)
 
-        # Make the dropdown menu taller and wider
-        self.number_count_combo.setFixedSize(300, 40)  # Set size
-        self.number_count_combo.setStyleSheet("background-color: white; color: black;")  # Set background color to white and text color to black
+        # Add combo box label and combo box to a horizontal layout
+        combo_layout = QVBoxLayout()
+        combo_layout.addWidget(label_num_count)
+        combo_layout.addWidget(self.number_count_combo)
+        combo_layout.setAlignment(Qt.AlignCenter)
 
-        # Set the drop-down arrow to be transparent
-        self.number_count_combo.view().setStyleSheet("QListView{selection-background-color: transparent;}")
+        # Add the horizontal layout to the main layout
+        self.layout.addLayout(combo_layout)
 
-        self.layout.addWidget(self.number_count_combo, alignment=QtCore.Qt.AlignCenter)
-
-        self.layout.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))  # Add vertical spacer
+        # Spacer item
+        self.layout.addItem(
+            QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        )
 
         # Create default number of spin boxes
         self.create_spinboxes(2)
 
-        self.layout.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))  # Add vertical spacer
-
         # Button for calculating average
         self.calculate_button = QPushButton("Solve", clicked=self.calculate_average)
-        self.calculate_button.setStyleSheet("background-color: #4CAF50; color: white; border: none; border-radius: 5px; padding: 20px;")  # Increase padding
-        self.calculate_button.setFixedSize(350, 70)  # Increase size
-        self.layout.addWidget(self.calculate_button, alignment=QtCore.Qt.AlignCenter)
+        self.calculate_button.setStyleSheet(
+            "background-color: #4CAF50; color: white; border: none; border-radius: 5px; padding: 10px;"
+        )
+        self.calculate_button.setFixedSize(300, 80)  # Set button size
+
+        # Add solve button to the layout with center alignment
+        self.layout.addWidget(self.calculate_button, alignment=Qt.AlignCenter)
+
+        # Spacer item
+        self.layout.addItem(
+            QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        )
 
         # Label for displaying result
         self.result_label = QLabel()
-        self.result_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.result_label.setAlignment(Qt.AlignCenter)
         self.result_label.setStyleSheet("font-size: 18pt; font-weight: bold;")
-        self.layout.addWidget(self.result_label, alignment=QtCore.Qt.AlignCenter)
+
+        # Add result label to the layout
+        self.layout.addWidget(self.result_label)
+
+        # Apply style sheet to round the window edges
+        self.setStyleSheet(
+            "border-radius: 10px; background-color: #444444; color: white;"
+        )
 
     def create_spinboxes(self, count):
-        # Create spin boxes and labels based on the given count
-        for i in range(count):
-            label = QLabel(f"Number {i+1}:")
-            label.setAlignment(QtCore.Qt.AlignCenter)
-            spinbox = QDoubleSpinBox()
-            spinbox.setStyleSheet("background-color: white; color: black;")  # Set background color to white and text color to black
-            spinbox.setDecimals(2)
-            spinbox.setRange(-10000, 10000)
-            spinbox.setFixedHeight(40)  # Set height of the spin box
-
-            # Remove up and down arrows from the spin box
-            spinbox.setButtonSymbols(QDoubleSpinBox.NoButtons)
-
-            self.layout.addWidget(label)
-            self.layout.addWidget(spinbox)
-            self.num_spinboxes.append((label, spinbox))
-
-    def clear_spinboxes(self):
-        # Remove existing spin boxes and labels
+        # Clear existing spin boxes and labels
         for label, spinbox in self.num_spinboxes:
             label.deleteLater()
             spinbox.deleteLater()
         self.num_spinboxes.clear()
 
+        # Create spin boxes and labels based on the given count
+        for i in range(count):
+            label = QLabel(f"Number {i+1}:")
+            label.setAlignment(Qt.AlignCenter)
+            label.setStyleSheet(
+                "font-weight: bold; font-size: 14pt;"
+            )  # Adjust font size
+            spinbox = QDoubleSpinBox()
+            spinbox.setStyleSheet(
+                "background-color: white; color: black; border-radius: 5px; font-size: 14pt; text-align: center;"
+            )  # Adjust font size and alignment
+            spinbox.setDecimals(2)
+            spinbox.setRange(-10000, 10000)
+            spinbox.setFixedSize(400, 40)  # Set spinbox size
+            spinbox.setButtonSymbols(QDoubleSpinBox.NoButtons)
+
+            # Add spin boxes and labels to the main layout with center alignment
+            label_layout = QVBoxLayout()
+            label_layout.addWidget(label)
+            label_layout.addWidget(spinbox)
+            label_layout.setAlignment(Qt.AlignCenter)
+            self.layout.addLayout(label_layout)
+
+            self.num_spinboxes.append((label, spinbox))
+
     def update_spinboxes(self):
         # Update number of spin boxes based on ComboBox selection
         count = int(self.number_count_combo.currentText())
-        self.clear_spinboxes()
         self.create_spinboxes(count)
 
     def calculate_average(self):
@@ -110,6 +140,5 @@ class AveragingCalculator(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = AveragingCalculator()
-    window.setFixedSize(600, 800)  # Set window size
     window.show()
     sys.exit(app.exec_())
