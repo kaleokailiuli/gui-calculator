@@ -1,4 +1,5 @@
 import sys
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import (
     QApplication,
     QWidget,
@@ -22,7 +23,7 @@ class AveragingCalculator(QWidget):
     def initUI(self):
         # Set up the main window
         self.setWindowTitle("Averaging Calculator")
-        self.setFixedSize(600, 600)  # Set window size with fixed dimensions
+        self.resize(600, 600)  # Set window size with fixed dimensions
 
         # Main layout setup
         self.layout = QVBoxLayout(self)
@@ -40,6 +41,7 @@ class AveragingCalculator(QWidget):
         self.number_count_combo = QComboBox()
         self.number_count_combo.addItems(["2", "3", "4", "5"])
         self.number_count_combo.setFixedSize(300, 40)
+        #self.number_count_combo.setIconSize(QSize(0,0))
         self.number_count_combo.setStyleSheet(
             "background-color: white; color: black; border-radius: 5px;"
         )
@@ -84,6 +86,7 @@ class AveragingCalculator(QWidget):
 
         # Add result label to the layout
         self.layout.addWidget(self.result_label)
+        self.layout.addStretch()
 
         # Apply style sheet to round the window edges
         self.setStyleSheet(
@@ -121,6 +124,7 @@ class AveragingCalculator(QWidget):
             self.layout.addLayout(label_layout)
 
             self.num_spinboxes.append((label, spinbox))
+        self.resize(600,(200 + 100*count))
 
     def update_spinboxes(self):
         # Update number of spin boxes based on ComboBox selection
