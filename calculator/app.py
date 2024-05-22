@@ -23,7 +23,7 @@ class AveragingCalculator(QWidget):
     def initUI(self):
         # Set up the main window
         self.setWindowTitle("Professional Averaging Calculator")
-        self.setFixedSize(600, 500)
+        self.setFixedSize(600, 500)  # default size before resize
 
         # Main layout setup
         self.layout = QVBoxLayout(self)
@@ -51,7 +51,7 @@ class AveragingCalculator(QWidget):
         self.number_count_combo.addItems(["2", "3", "4", "5"])
         self.number_count_combo.setFixedSize(300, 40)
         self.number_count_combo.setStyleSheet(
-            "background-color: #444444; color: #FFFFFF; border: 1px solid #777777; border-radius: 5px; font-size: 16px;"
+            "background-color: #333333; color: #FFFFFF; border: 1px solid #777777; border-radius: 5px; font-size: 16px;"
         )
         self.number_count_combo.setFont(QFont("Arial", 14))
         self.number_count_combo.currentIndexChanged.connect(self.update_spinboxes)
@@ -110,7 +110,7 @@ class AveragingCalculator(QWidget):
         self.layout.addLayout(self.button_layout)
 
         # Apply style sheet to set dark background
-        self.setStyleSheet("QWidget { background-color: #2D2D2D; }")
+        self.setStyleSheet("QWidget { background-color: #000000; }")
 
     def create_spinboxes(self, count):
         # Clear existing spin boxes and labels
@@ -130,7 +130,7 @@ class AveragingCalculator(QWidget):
             label.setFont(QFont("Arial", 20, QFont.Bold))
             spinbox = QDoubleSpinBox()
             spinbox.setStyleSheet(
-                "background-color: #444444; color: white; border: 1px solid #777777; border-radius: 5px; font-size: 20px; font-weight: bold;"
+                "background-color: #333333; color: white; border: 1px solid #777777; border-radius: 5px; font-size: 20px; font-weight: bold;"
             )
             spinbox.setFont(QFont("Arial", 20, QFont.Bold))
             spinbox.setDecimals(2)
