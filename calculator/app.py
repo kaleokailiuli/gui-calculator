@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (
     QSizePolicy,
 )
 
+
 class AveragingCalculator(QWidget):
     def __init__(self):
         super().__init__()
@@ -34,7 +35,9 @@ class AveragingCalculator(QWidget):
         # Header label
         header_label = QLabel("Averaging Calculator")
         header_label.setAlignment(Qt.AlignCenter)
-        header_label.setStyleSheet("font-weight: bold; font-size: 24px; color: #FFFFFF;")
+        header_label.setStyleSheet(
+            "font-weight: bold; font-size: 24px; color: #FFFFFF;"
+        )
         header_label.setFont(QFont("Arial", 24, QFont.Bold))
 
         # Label for number count selection
@@ -63,21 +66,25 @@ class AveragingCalculator(QWidget):
         self.layout.addWidget(header_label)
         self.layout.addLayout(combo_layout)
 
+        # Label for displaying result
+        self.result_label = QLabel()
+        self.result_label.setAlignment(Qt.AlignCenter)
+        self.result_label.setStyleSheet(
+            "font-size: 18pt; font-weight: bold; color: #FF0000;"
+        )
+        self.result_label.setFont(QFont("Arial", 18, QFont.Bold))
+
+        self.layout.addWidget(self.result_label)
+
         # Create default number of spin boxes
         self.spinbox_layout = QVBoxLayout()
         self.layout.addLayout(self.spinbox_layout)
         self.create_spinboxes(2)
 
-        # Label for displaying result
-        self.result_label = QLabel()
-        self.result_label.setAlignment(Qt.AlignCenter)
-        self.result_label.setStyleSheet("font-size: 18pt; font-weight: bold; color: #FFFFFF;")
-        self.result_label.setFont(QFont("Arial", 18, QFont.Bold))
-
-        self.layout.addWidget(self.result_label)
-
         # Spacer item
-        self.layout.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        self.layout.addItem(
+            QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        )
 
         # Layout for buttons
         self.button_layout = QHBoxLayout()
@@ -113,7 +120,7 @@ class AveragingCalculator(QWidget):
         self.num_spinboxes.clear()
         self.spinbox_layout.setParent(None)
         self.spinbox_layout = QVBoxLayout()
-        self.layout.insertLayout(3, self.spinbox_layout)
+        self.layout.insertLayout(4, self.spinbox_layout)
 
         # Create spin boxes and labels based on the given count
         for i in range(count):
@@ -141,7 +148,7 @@ class AveragingCalculator(QWidget):
             self.num_spinboxes.append((label, spinbox))
 
         # Resize window based on the number of spin boxes
-        new_height = 400 + count * 80
+        new_height = 350 + count * 60
         self.setFixedSize(600, new_height)
 
     def update_spinboxes(self):
@@ -159,15 +166,11 @@ class AveragingCalculator(QWidget):
             self.result_label.setText("Please enter numbers.")
 
     def reset_spinboxes(self):
-        # Reset all spinboxes to 0 and reposition above buttons
+        # Reset all spinboxes to 0 and clear the result label
         for label, spinbox in self.num_spinboxes:
             spinbox.setValue(0)
-        self.result_label.setText("")  # Clear the result label
-        self.spinbox_layout.setParent(None)
-        self.spinbox_layout = QVBoxLayout()
-        self.layout.insertLayout(3, self.spinbox_layout)
-        count = int(self.number_count_combo.currentText())
-        self.create_spinboxes(count)
+        self.result_label.setText("")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
